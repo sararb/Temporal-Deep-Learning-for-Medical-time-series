@@ -3,10 +3,9 @@
 
 ## LSTM model 
 
-
  |  |lstm-time_concat_soft |lstm-no_time |lstm-time_concat_mlp |lstm-time_mask |
  |--- | --- | --- | --- | --- | 
- | model_type | lstm | lstm | lstm | lstm | 
+ | time encoding | soft one-hot | no time | mlp projection | time mask | 
  | min_measurement | 3 | 3 | 3 | 3 | 
  | cycle_len | 15 | 15 | 30 | 20 | 
  | batch_size | 4 | 12 | 20 | 32 | 
@@ -36,7 +35,7 @@
 
  |  |clstm-forget_output |clstm-output |clstm-forget |
  |--- | --- | --- | --- | 
- | model_type | clstm | clstm | clstm | 
+ | temporal gate | forget + output | output | forget | 
  | min_measurement | 3 | 3 | 3 | 
  | cycle_len | 40 | 20 | 15 | 
  | batch_size | 8 | 16 | 32 | 
@@ -64,8 +63,7 @@
 
  |  |attention-time_encode |attention-time_concat_soft |attention-no_time |attention-time_concat_mlp |attention-time_mask |
  |--- | --- | --- | --- | --- | --- | 
- | name | time_encode | time_concat_soft | no_time | time_concat_mlp | time_mask | 
- | model_type | attention | attention | attention | attention | attention | 
+ | time encoding | positional time | soft one-hot | no time | mlp projection | time mask | 
  | min_measurement | 3 | 3 | 3 | 3 | 3 | 
  | cycle_len | 15 | 15 | 30 | 35 | 5 | 
  | batch_size | 16 | 12 | 32 | 4 | 4 | 
