@@ -1,0 +1,85 @@
+# time variant
+name: 'forget_output'
+# Specify paths to  data and results directory
+data_directory:  /home/rabhi/dataset/temporal_hba1c/modelisation_hba1c_retino_v3/dictionaries/
+validation_file_name:  None
+train_file_name:  None
+test_file_name:  None
+min_measurement: None
+use_time_info: False
+use_patient_info: None
+
+result_dir: /home/rabhi/dataset/temporal_hba1c/results
+side_info: ['duree_non_suivi_norm']
+
+# Training info 
+cycle_len: ['optimize', 'int', 5, 40, 5]
+batch_size: ['optimize', 'int', 4, 32, 4]
+val_bs: None
+device: cuda
+n_workers: 4
+class_weight_1: ['optimize', 'float', 0.1, 0.7, 0.05]
+max_len: None
+
+#optim info 
+optimizer: ['optimize', 'categorical', 'radam', 'adam', 'sgd']
+weight_decay: ['optimize', 'uniform', 0.000001, 0.0001]
+max_lr: ['optimize', 'uniform',  0.0001, 0.01]
+
+# patient module 
+patient_config: 
+  representation_type: mlp 
+  num_inputs: 1
+  hidden_dims: ['optimize', 'int', 4, 32, 4]
+  activation: ['optimize', 'categorical', 'tanh', 'relu', 'gelu']
+  output_dim: ['optimize', 'int', 8, 64, 8]
+
+# time module config 
+time_config: 
+  representation_type: identity
+  hidden_dims: None
+  projection_size: None
+  activation: 'gelu'
+  output_dim: 1
+  embeddings_init_std: None
+ 
+# event module config 
+event_config: 
+  categoricals: []
+  continuous: ['seq_hba1c']
+  categorical_representation: mlp
+  continuous_representation: mlp
+  categorical_embeddings: []
+  continuous_hidden_dims: ['optimize', 'int', 4, 32, 4]
+  continuous_output_dim: ['optimize', 'int', 8, 64, 8]
+  tf_activation: ['optimize', 'categorical', 'tanh', 'relu', 'gelu']
+
+#model info 
+aggregation_mode: concat
+use_patient_info: None
+model_type: clstm
+temporal_model: 
+  input_size : None
+  hidden_size : ['optimize', 'int', 8, 64, 8]
+  dropout : ['optimize', 'float', 0, 0.5, 0.1]
+  bidirectional : False 
+  model_time : forget_output
+  timedecay_size : ['optimize', 'int', 1, 5, 1]
+  num_layers : None
+  pad_value : -0.2
+  attn_heads : None
+  hidden_dropout_prob : None
+  feed_forward_hidden : None
+  hidden_act : 'tanh'
+  attn_dropout_prob : None
+  num_input :  1
+  output_self_attention : False
+
+# classification head
+classifier:
+  input_dim: None
+  hidden_dim: ['optimize', 'int', 8, 64, 8]
+  output_dropout: ['optimize', 'float', 0, 0.5, 0.1]
+  num_classes: 2
+  use_patient_info: None 
+  patient_embedding_dim: None
