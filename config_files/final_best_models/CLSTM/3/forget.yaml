@@ -1,0 +1,86 @@
+# time variant
+name: 'forget'
+# Specify paths to  data and results directory
+data_directory:  /home/rabhi/dataset/temporal_hba1c/modelisation_hba1c_retino_v3/dictionaries/
+validation_file_name:  "121_patients_min_3_seq_infos_Valid.sav"
+train_file_name:  "965_patients_min_3_seq_infos_Train.sav"
+test_file_name:  "121_patients_min_3_seq_infos_Test.sav"
+min_measurement: 3
+use_time_info: False
+use_patient_info: True
+
+result_dir: /home/rabhi/dataset/temporal_hba1c/results
+side_info: ['duree_non_suivi_norm']
+
+# Training info 
+cycle_len: 15
+batch_size: 32
+val_bs: 121
+device: cuda
+n_workers: 4
+class_weight: [0.4, 0.6]
+max_len: 151
+
+#optim info 
+optimizer: sgd
+weight_decay: 0.00002991
+max_lr: 0.009452
+monitor: auc_score
+mode: max
+
+# patient module 
+patient_config: 
+  representation_type: mlp 
+  num_inputs: 1
+  hidden_dims: [4]
+  activation: gelu
+  output_dim: 24
+
+# time module config 
+time_config: 
+  representation_type: identity
+  hidden_dims: None
+  projection_size: None
+  activation: 'gelu'
+  output_dim: 1
+  embeddings_init_std: None
+ 
+# event module config 
+event_config: 
+  categoricals: []
+  continuous: ['seq_hba1c']
+  categorical_representation: mlp
+  continuous_representation: mlp
+  categorical_embeddings: []
+  continuous_hidden_dims: [8]
+  continuous_output_dim: 16
+  tf_activation: tanh
+
+#model info 
+aggregation_mode: concat
+model_type: clstm
+temporal_model: 
+  input_size : None
+  hidden_size : 56
+  dropout : 0.4
+  bidirectional : False 
+  model_time : forget
+  timedecay_size : 2
+  num_layers : None
+  pad_value : -0.2
+  attn_heads : None
+  hidden_dropout_prob : None
+  feed_forward_hidden : None
+  hidden_act : 'tanh'
+  attn_dropout_prob : None
+  num_input :  1
+  output_self_attention : False
+
+# classification head
+classifier:
+  input_dim: None
+  hidden_dim: 40
+  output_dropout: 0.2
+  num_classes: 2
+  use_patient_info: Fasle 
+  patient_embedding_dim: None
